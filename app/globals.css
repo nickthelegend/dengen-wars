@@ -1,0 +1,335 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --background: 255 255 255;
+  --foreground: 0 0 0;
+  --card: 255 255 255;
+  --card-foreground: 0 0 0;
+  --popover: 255 255 255;
+  --popover-foreground: 0 0 0;
+  --primary: 0 0 0;
+  --primary-foreground: 255 255 255;
+  --secondary: 255 255 102;
+  --secondary-foreground: 0 0 0;
+  --muted: 245 245 245;
+  --muted-foreground: 115 115 115;
+  --accent: 255 229 0;
+  --accent-foreground: 0 0 0;
+  --destructive: 247 99 99;
+  --destructive-foreground: 255 255 255;
+  --border: 0 0 0;
+  --input: 255 255 255;
+  --ring: 0 0 0;
+  --radius: 0px;
+}
+
+.dark {
+  --background: 0 0 0;
+  --foreground: 255 255 255;
+  --card: 0 0 0;
+  --card-foreground: 255 255 255;
+  --popover: 0 0 0;
+  --popover-foreground: 255 255 255;
+  --primary: 255 255 255;
+  --primary-foreground: 0 0 0;
+  --secondary: 255 229 0;
+  --secondary-foreground: 0 0 0;
+  --muted: 38 38 38;
+  --muted-foreground: 163 163 163;
+  --accent: 255 229 0;
+  --accent-foreground: 0 0 0;
+  --destructive: 247 99 99;
+  --destructive-foreground: 255 255 255;
+  --border: 255 255 255;
+  --input: 38 38 38;
+  --ring: 255 255 255;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground font-mono;
+  }
+}
+
+html,
+body {
+  height: 100%;
+  font-family: 'Courier New', monospace;
+  background: #ffffff;
+  color: #000000;
+  overflow-x: hidden;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.dark html,
+.dark body {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* Improved text rendering */
+* {
+  text-rendering: optimizeLegibility;
+}
+
+/* Better focus styles */
+*:focus-visible {
+  outline: 2px solid #FFE500;
+  outline-offset: 2px;
+  border-radius: 0;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Better selection colors */
+::selection {
+  background: #FFE500;
+  color: #000000;
+}
+
+.dark ::selection {
+  background: #FFE500;
+  color: #000000;
+}
+
+#__next {
+  height: 100%;
+}
+
+/* Neo Brutalist scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff;
+  border: 2px solid #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #000000;
+  border: 1px solid #000000;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #FFE500;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #000000;
+  border: 2px solid #ffffff;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #ffffff;
+  border: 1px solid #ffffff;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #FFE500;
+}
+
+/* Neo Brutalist utility classes */
+.brutal-border {
+  border: 3px solid #000000;
+}
+
+.brutal-shadow {
+  box-shadow: 4px 4px 0px 0px #000000;
+}
+
+.brutal-shadow-lg {
+  box-shadow: 8px 8px 0px 0px #000000;
+}
+
+.brutal-button {
+  @apply brutal-border brutal-shadow bg-yellow-300 hover:bg-lime-300 active:translate-x-1 active:translate-y-1 active:shadow-none transition-all duration-75;
+}
+
+.brutal-card {
+  @apply brutal-border brutal-shadow bg-white p-4;
+}
+
+.dark .brutal-border {
+  border-color: #ffffff;
+}
+
+.dark .brutal-shadow {
+  box-shadow: 4px 4px 0px 0px #ffffff;
+}
+
+.dark .brutal-shadow-lg {
+  box-shadow: 8px 8px 0px 0px #ffffff;
+}
+
+.dark .brutal-card {
+  @apply bg-black;
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+  .brutal-border {
+    border-width: 2px;
+  }
+  
+  .brutal-shadow {
+    box-shadow: 2px 2px 0px 0px #000000;
+  }
+  
+  .brutal-shadow-lg {
+    box-shadow: 4px 4px 0px 0px #000000;
+  }
+  
+  .brutal-button {
+    @apply active:translate-x-0 active:translate-y-0;
+  }
+}
+
+@media (max-width: 480px) {
+  .brutal-border {
+    border-width: 1px;
+  }
+  
+  .brutal-shadow {
+    box-shadow: 1px 1px 0px 0px #000000;
+  }
+  
+  .brutal-shadow-lg {
+    box-shadow: 2px 2px 0px 0px #000000;
+  }
+  
+  .brutal-button {
+    @apply active:translate-x-0 active:translate-y-0;
+  }
+}
+
+/* Mobile-first improvements */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+  
+  body {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  
+  /* Larger touch targets */
+  button, a, input, select, textarea {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  html {
+    font-size: 13px;
+  }
+  
+  body {
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  
+  /* Even larger touch targets on small screens */
+  button, a {
+    min-height: 48px;
+  }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+  .brutal-button:hover {
+    transform: none;
+  }
+  
+  .brutal-card:hover {
+    transform: none;
+  }
+  
+  /* Disable hover effects on touch devices */
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Better touch feedback */
+  button:active, .brutal-button:active {
+    transform: scale(0.98);
+  }
+}
+
+/* Performance optimizations */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Focus improvements for accessibility */
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid #FFE500;
+  outline-offset: 2px;
+}
+
+/* Smooth transitions for better UX */
+.brutal-button,
+.brutal-card {
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --border-primary: #000000;
+    --text-primary: #000000;
+  }
+  
+  .dark {
+    --border-primary: #ffffff;
+    --text-primary: #ffffff;
+  }
+}
+
+/* Loading states */
+.loading {
+  pointer-events: none;
+  opacity: 0.7;
+  cursor: wait;
+}
+
+/* Error states */
+.error {
+  border-color: #fa7a7a !important;
+  background-color: rgba(250, 122, 122, 0.1) !important;
+}
+
+/* Success states */
+.success {
+  border-color: #9dfc7c !important;
+  background-color: rgba(157, 252, 124, 0.1) !important;
+}

@@ -1,0 +1,163 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id           String @id @default(cuid())
+  username     String @unique
+  walletAddress String? @unique
+  wins         Int    @default(0)
+  losses       Int    @default(0)
+  totalBattles Int    @default(0)
+  winStreak    Int    @default(0)
+  degenBalance Decimal @default(0) @db.Decimal(20, 6)
+  algoBalance  Decimal @default(0) @db.Decimal(20, 6)
+  createdAt    DateTime @default(now())
+  
+  teams        MemeTeam[]
+  favorites    FavoriteCoin[]
+  presets      TeamPreset[]
+  player1Battles MemeBattle[] @relation("Player1")
+  player2Battles MemeBattle[] @relation("Player2")
+  wonBattles   MemeBattle[] @relation("Winner")
+  tokenPurchases TokenPurchase[]
+  
+  // Multiplayer relations
+  multiplayerPlayer1 MultiplayerBattle[] @relation("MultiplayerPlayer1")
+  multiplayerPlayer2 MultiplayerBattle[] @relation("MultiplayerPlayer2")
+  multiplayerWins    MultiplayerBattle[] @relation("MultiplayerWinner")
+  matchmakingQueue   MatchmakingQueue[]
+  battleRoomPlayer1  BattleRoom[] @relation("BattleRoomPlayer1")
+  battleRoomPlayer2  BattleRoom[] @relation("BattleRoomPlayer2")
+}
+
+model TokenPurchase {
+  id           String @id @default(cuid())
+  userId       String
+  algoAmount   Decimal @db.Decimal(20, 6)
+  degenAmount  Decimal @db.Decimal(20, 6)
+  rate         Int
+  txId         String @unique
+  status       String @default("pending") // pending, completed, failed
+  createdAt    DateTime @default(now())
+  
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model MemeTeam {
+  id        String @id @default(cuid())
+  userId    String
+  coin1Id   Int
+  coin2Id   Int
+  coin3Id   Int
+  coin1Name String
+  coin2Name String
+  coin3Name String
+  createdAt DateTime @default(now())
+  
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  p1Battles MemeBattle[] @relation("Player1Team")
+  p2Battles MemeBattle[] @relation("Player2Team")
+}
+
+model MemeBattle {
+  id           String @id @default(cuid())
+  player1Id    String
+  player2Id    String
+  player1TeamId String
+  player2TeamId String
+  player1Score Float  @default(0)
+  player2Score Float  @default(0)
+  winnerId     String?
+  battleData   String
+  strategy     String @default("balanced")
+  stakeAmount  Decimal @default(0) @db.Decimal(20, 6)
+  createdAt    DateTime @default(now())
+  endedAt      DateTime?
+  
+  player1     User @relation("Player1", fields: [player1Id], references: [id])
+  player2     User @relation("Player2", fields: [player2Id], references: [id])
+  winner      User? @relation("Winner", fields: [winnerId], references: [id])
+  player1Team MemeTeam @relation("Player1Team", fields: [player1TeamId], references: [id])
+  player2Team MemeTeam @relation("Player2Team", fields: [player2TeamId], references: [id])
+}
+
+model FavoriteCoin {
+  id       String @id @default(cuid())
+  userId   String
+  coinId   Int
+  coinName String
+  addedAt  DateTime @default(now())
+  
+  user     User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, coinId])
+}
+
+model TeamPreset {
+  id        String @id @default(cuid())
+  userId    String
+  name      String
+  coin1Id   Int
+  coin2Id   Int
+  coin3Id   Int
+  coin1Name String
+  coin2Name String
+  coin3Name String
+  createdAt DateTime @default(now())
+  
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model MultiplayerBattle {
+  id          String @id @default(cuid())
+  roomId      String @unique
+  player1Id   String
+  player2Id   String
+  player1Team String // JSON
+  player2Team String // JSON
+  player1Score Float @default(0)
+  player2Score Float @default(0)
+  winnerId    String?
+  battleData  String // JSON of price history
+  status      String @default("waiting") // waiting, active, finished
+  createdAt   DateTime @default(now())
+  endedAt     DateTime?
+  
+  player1 User @relation("MultiplayerPlayer1", fields: [player1Id], references: [id])
+  player2 User @relation("MultiplayerPlayer2", fields: [player2Id], references: [id])
+  winner  User? @relation("MultiplayerWinner", fields: [winnerId], references: [id])
+}
+
+model MatchmakingQueue {
+   id          String @id @default(cuid())
+   userId      String
+   teamData    String // JSON
+   battleType  String @default("pvp") // pvp or pve
+   queuedAt    DateTime @default(now())
+
+   user User @relation(fields: [userId], references: [id])
+ }
+
+model BattleRoom {
+   id          String @id @default(cuid())
+   player1Id   String
+   player2Id   String?
+   player1Team String // JSON
+   player2Team String? // JSON for PVE battles
+   battleType  String @default("pvp") // pvp or pve
+   status      String @default("waiting") // waiting, active, finished
+   results     String? // JSON results
+   startedAt   DateTime?
+   endedAt     DateTime?
+   createdAt   DateTime @default(now())
+
+   player1 User @relation("BattleRoomPlayer1", fields: [player1Id], references: [id])
+   player2 User? @relation("BattleRoomPlayer2", fields: [player2Id], references: [id])
+ }

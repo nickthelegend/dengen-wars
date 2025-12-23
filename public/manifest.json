@@ -1,0 +1,16 @@
+{
+  "name": "DengenLeague",
+  "short_name": "DengenLeague",
+  "description": "Meme coin battle arena on Algorand",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#00ff41",
+  "icons": [
+    {
+      "src": "/wolf-removebg-preview.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
